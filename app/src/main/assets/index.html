@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0,user-scalable=no"
+          id="viewport"/>
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="format-detection" content="telephone=no">
+    <title>WebApp</title>
+    <link rel="stylesheet" href="css/common.css"/>
+</head>
+<body>
+<div>
+
+    <div class="title-item">
+        同步请求
+    </div>
+
+    <div>
+        <button id="showBack" class="btn">显示返回按钮</button>
+        <button id="hideBack" class="btn">隐藏返回按钮</button>
+        <button id="setTitle" class="btn">设置标题栏</button>
+    </div>
+
+    <div class="title-item">
+        异步请求
+    </div>
+
+    <div>
+        <button id="alipay" class="btn">支付宝支付</button>
+    </div>
+
+</div>
+<script src="js/jquery.min.js"></script>
+<script src="js/android.js"></script>
+<script type="text/javascript" charset="utf-8">
+    $(function () {
+        $('#showBack').on('click', function () {
+            App.isShowBack(true);
+        });
+
+        $('#hideBack').on('click', function () {
+            App.isShowBack(false);
+        });
+
+         $('#setTitle').on('click', function () {
+            App.setTitle('Android 开发');
+        });
+    });
+
+
+</script>
+</body>
+</html>

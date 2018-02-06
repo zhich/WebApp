@@ -1,0 +1,14 @@
+* {
+    margin: 0;
+    padding: 0;
+}
+
+.title-item {
+    padding:10px;
+    background: green;
+}
+
+.btn{
+margin:10px;
+padding:2px;
+}
