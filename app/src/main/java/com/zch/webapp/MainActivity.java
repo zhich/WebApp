@@ -2,8 +2,6 @@ package com.zch.webapp;
 
 import android.os.Bundle;
 
-import com.zch.webapp.base.BaseWebActivity;
-
 public class MainActivity extends BaseWebActivity {
 
     @Override
