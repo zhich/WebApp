@@ -38,6 +38,7 @@ public class BridgeWebView extends WebView {
         }
         WebSettings webSettings = this.getSettings();
         webSettings.setJavaScriptEnabled(true);
+        webSettings.setJavaScriptCanOpenWindowsAutomatically(true);
         webSettings.setDefaultTextEncodingName("utf-8");
         webSettings.setCacheMode(WebSettings.LOAD_DEFAULT);
         webSettings.setDomStorageEnabled(true);

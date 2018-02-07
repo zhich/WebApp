@@ -28,7 +28,7 @@ public class App extends Plugin {
     private PluginResult isShowBack(JSONObject args) {
         try {
             boolean isShow = args.getBoolean("isShow");
-            context.isShowBack(isShow);
+//            context.isShowBack(isShow);
             return PluginResult.newEmptyPluginResult();
         } catch (JSONException e) {
             e.printStackTrace();
