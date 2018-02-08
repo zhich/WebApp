@@ -6,12 +6,18 @@
 package com.zch.webapp;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.net.http.SslError;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.ConsoleMessage;
 import android.webkit.JsPromptResult;
+import android.webkit.JsResult;
 import android.webkit.SslErrorHandler;
 import android.webkit.WebChromeClient;
 import android.webkit.WebView;
@@ -23,6 +29,7 @@ import com.zch.webapp.plugin.IPlugin;
 import com.zch.webapp.plugin.PluginManager;
 import com.zch.webapp.plugin.PluginNotFoundException;
 import com.zch.webapp.plugin.PluginResult;
+import com.zch.webapp.view.BridgeWebView;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -37,10 +44,13 @@ import java.io.File;
  */
 public class BaseWebActivity extends Activity {
 
+    private static final String TAG = BaseWebActivity.class.getSimpleName();
+
     protected FrameLayout mWebFrameLayout;
     protected BridgeWebView mWebView;
     protected LinearLayout mLoadingLayout;
 
+    protected Context mContext;
     protected PluginManager mPluginManager;
 
     protected void init() {
@@ -92,6 +102,23 @@ public class BaseWebActivity extends Activity {
     private class WebServerChromeClient extends WebChromeClient {
 
         @Override
+        public boolean onJsAlert(WebView view, String url, String message, final JsResult result) {
+            new AlertDialog.Builder(mContext)
+                    .setTitle("提示")
+                    .setMessage(message)
+                    .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            result.confirm();
+                        }
+                    })
+                    .setCancelable(false)
+                    .create()
+                    .show();
+            return true;
+        }
+
+        @Override
         public boolean onJsPrompt(WebView view, String url, String message, String defaultValue, JsPromptResult result) {
             JSONObject args = null;
             JSONObject head = null;
@@ -101,7 +128,7 @@ public class BaseWebActivity extends Activity {
                     try {
                         args = new JSONObject(defaultValue);
                     } catch (Exception e) {
-                        e.printStackTrace();
+                        Log.e(TAG, e.getMessage());
                     }
                 }
 
@@ -109,14 +136,21 @@ public class BaseWebActivity extends Activity {
                 result.confirm(execResult);
                 return true;
             } catch (JSONException e) {
-                e.printStackTrace();
+                Log.e(TAG, e.getMessage());
                 result.confirm(PluginResult.getErrorJSON(e));
                 return true;
             } catch (PluginNotFoundException e) {
-                e.printStackTrace();
+                Log.e(TAG, e.getMessage());
                 result.confirm(PluginResult.getErrorJSON(e));
                 return true;
             }
+        }
+
+        @Override
+        public boolean onConsoleMessage(ConsoleMessage consoleMessage) {
+            Log.d(TAG, "lineNumber=" + consoleMessage.lineNumber() + ", sourceId=" + consoleMessage.sourceId());
+            Log.d(TAG, "message=" + consoleMessage.message());
+            return super.onConsoleMessage(consoleMessage);
         }
     }
 

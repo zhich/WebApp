@@ -4,11 +4,24 @@
 }
 
 .title-item {
-    padding:10px;
-    background: green;
+    padding: 10px;
+    background: #4D4D4D;
+    color: #ffffff;
 }
 
-.btn{
-margin:10px;
-padding:2px;
+button {
+    outline: none;
+    /* 点击安按钮的时候就不会有蓝色边框了*/
+}
+
+.btn {
+    margin: 8px;
+    padding: 3px;
+    color: #3B3B3B;
+    background: #00EE76;
+    border: dashed 5px #00EE76;
+    font-size: 12px;
+    -moz-border-radius: 3px;
+    -webkit-border-radius: 3px;
+    border-radius: 3px;
 }

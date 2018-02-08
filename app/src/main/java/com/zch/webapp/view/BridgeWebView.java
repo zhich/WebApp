@@ -3,7 +3,7 @@
   * Copyright (c) 2018 zch. All right reserved.
   *
   */
-package com.zch.webapp;
+package com.zch.webapp.view;
 
 import android.content.Context;
 import android.os.Build;
@@ -40,9 +40,11 @@ public class BridgeWebView extends WebView {
         webSettings.setJavaScriptEnabled(true);
         webSettings.setJavaScriptCanOpenWindowsAutomatically(true);
         webSettings.setDefaultTextEncodingName("utf-8");
-        webSettings.setCacheMode(WebSettings.LOAD_DEFAULT);
+        webSettings.setCacheMode(WebSettings.LOAD_NO_CACHE);
         webSettings.setDomStorageEnabled(true);
-        this.setVerticalScrollBarEnabled(false);
-        this.requestFocusFromTouch();
+        setVerticalScrollBarEnabled(false);
+        /*点击input弹出输入法*/
+        setFocusable(true);
+        setFocusableInTouchMode(true);
     }
 }

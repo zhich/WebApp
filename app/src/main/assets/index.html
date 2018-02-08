@@ -1,57 +1,112 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8"/>
+    <meta charset="UTF-8" />
     <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
-    <meta name="viewport"
-          content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0,user-scalable=no"
-          id="viewport"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0,user-scalable=no"
+        id="viewport" />
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black">
     <meta name="format-detection" content="telephone=no">
     <title>WebApp</title>
-    <link rel="stylesheet" href="css/common.css"/>
+    <link rel="stylesheet" href="css/common.css" />
 </head>
+
 <body>
-<div>
-
-    <div class="title-item">
-        同步请求
-    </div>
-
     <div>
-        <button id="showBack" class="btn">显示返回按钮</button>
-        <button id="hideBack" class="btn">隐藏返回按钮</button>
-        <button id="setTitle" class="btn">设置标题栏</button>
+
+        <div class="title-item" style="margin-bottom:20px;">
+            同步请求
+        </div>
+
+        <div>
+            <button id="showBack" class="btn">显示返回按钮</button>
+            <button id="hideBack" class="btn">隐藏返回按钮</button>
+            <button id="setTitle" class="btn">设置标题文字内容</button>
+        </div>
+
+        <div>
+            <button id="finish" class="btn">退出当前Activity</button>
+            <button id="toLoginActivity" class="btn">跳转到登录界面</button>
+        </div>
+
+        <div>
+            <button id="setValue" class="btn">存值</button>
+            <input type="text" id="setId" style="width:80%" />
+        </div>
+
+        <div>
+            <button id="getValue" class="btn">取值</button>
+            <input type="text" id="getId" style="width:80%" />
+        </div>
+
+        <div class="title-item" style="margin:20px 0;">
+            异步请求
+        </div>
+
+        <div>
+            <button id="alipay" class="btn">支付宝支付</button>
+        </div>
+
     </div>
+    <script src="js/jquery.min.js"></script>
+    <script src="js/android.js"></script>
+    <script type="text/javascript" charset="utf-8">
+        $(function () {
+            $('#showBack').on('click', function () {
+                App.isShowBack(true);
+            });
 
-    <div class="title-item">
-        异步请求
-    </div>
+            $('#hideBack').on('click', function () {
+                App.isShowBack(false);
+            });
 
-    <div>
-        <button id="alipay" class="btn">支付宝支付</button>
-    </div>
+            $('#setTitle').on('click', function () {
+                App.setTitle('Android 开发');
+            });
 
-</div>
-<script src="js/jquery.min.js"></script>
-<script src="js/android.js"></script>
-<script type="text/javascript" charset="utf-8">
-    $(function () {
-        $('#showBack').on('click', function () {
-            App.isShowBack(true);
+            $('#finish').on('click', function () {
+                App.finish();
+            });
+
+            $('#toLoginActivity').on('click', function () {
+                var args = {
+                    "loginTip": "您好，请重新登录！"
+                }
+                App.jumpToNativePage('LoginActivity', args);
+            });
+
+            var setDefaultStr = '{ "key": "token", "value": "abc123", "fileName": "" }';
+            var getDefaultStr = '{ "key": "token", "defValue": "", "fileName": "" }';
+            $('#setId').val(setDefaultStr);
+            $('#getId').val(getDefaultStr);
+
+            $('#setValue').on('click', function () {
+                var data = $('#setId').val();
+                var json = JSON.parse(data);
+                var result = '';
+                if (json.fileName == undefined || json.fileName == '') {
+                    result = Preference.set(json.key, json.value);
+                } else {
+                    result = Preference.set(json.key, json.value, json.fileName);
+                }
+                alert("存值结果：" + result);
+            });
+
+            $('#getValue').on('click', function () {
+                var data = $('#getId').val();
+                var result = '';
+                var json = JSON.parse(data);
+                if (json.fileName == undefined || json.fileName == '') {
+                    result = Preference.get(json.key, json.value);
+                } else {
+                    result = Preference.get(json.key, json.value, json.fileName);
+                }
+                alert("取值结果：" + result);
+            });
         });
-
-        $('#hideBack').on('click', function () {
-            App.isShowBack(false);
-        });
-
-         $('#setTitle').on('click', function () {
-            App.setTitle('Android 开发');
-        });
-    });
-
-
-</script>
+    </script>
 </body>
+
 </html>

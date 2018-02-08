@@ -3,4 +3,7 @@
     <plugin
         name="App"
         class="com.zch.webapp.plugin.App"/>
+    <plugin
+        name="Preference"
+        class="com.zch.webapp.plugin.Preference"/>
 </plugins>
