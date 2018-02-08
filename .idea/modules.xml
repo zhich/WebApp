@@ -5,7 +5,10 @@
       <module fileurl="file://$PROJECT_DIR$/WebApp.iml" filepath="$PROJECT_DIR$/WebApp.iml" />
       <module fileurl="file://E:\workspace\github\WebApp\WebApp.iml" filepath="E:\workspace\github\WebApp\WebApp.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://F:\workspace\github\WebApp\webview\app.iml" filepath="F:\workspace\github\WebApp\webview\app.iml" />
       <module fileurl="file://E:\workspace\github\WebApp\app\app.iml" filepath="E:\workspace\github\WebApp\app\app.iml" />
+      <module fileurl="file://F:\workspace\github\WebApp\app\app-builder.iml" filepath="F:\workspace\github\WebApp\app\app-builder.iml" />
+      <module fileurl="file://$PROJECT_DIR$/webview/webview.iml" filepath="$PROJECT_DIR$/webview/webview.iml" />
     </modules>
   </component>
 </project>

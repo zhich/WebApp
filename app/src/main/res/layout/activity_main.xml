@@ -5,28 +5,22 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="com.zch.webapp.MainActivity">
+    tools:context="com.zch.app.MainActivity">
 
-    <include layout="@layout/view_titlebar"/>
-
-    <LinearLayout
-        android:id="@+id/ll_loading"
+    <Button
+        android:id="@+id/btnJsCallAndroid"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:gravity="center">
+        android:layout_height="wrap_content"
+        android:layout_margin="20dp"
+        android:text="Js 调用 Android"
+        android:textAllCaps="false"/>
 
-        <ProgressBar
-            style="?android:attr/progressBarStyle"
-            android:layout_width="30dp"
-            android:layout_height="30dp"/>
-    </LinearLayout>
 
-    <FrameLayout
-        android:id="@+id/webFrameLayout"
+    <Button
+        android:id="@+id/btnAndroidCallJs"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:visibility="gone"/>
-
+        android:layout_height="wrap_content"
+        android:layout_margin="20dp"
+        android:text="Android 调用 Js"
+        android:textAllCaps="false"/>
 </LinearLayout>

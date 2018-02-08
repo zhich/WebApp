@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0,user-scalable=no"
+        id="viewport" />
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="format-detection" content="telephone=no">
+    <title>WebApp</title>
+    <link rel="stylesheet" href="css/common.css" />
+</head>
+
+<body>
+    <div>
+        <div class="title-item" style="margin:20px 0;">
+            Web 页面
+        </div>
+
+        <div style="padding:10px;">
+            金额：
+            <span id="money" style="color:red;">1个亿</span>
+        </div>
+
+        <div style="padding:10px;">
+            姓名：
+            <span id="name" style="color:red;"></span>
+        </div>
+
+    </div>
+    <script src="js/jquery.min.js"></script>
+    <script src="js/android.js"></script>
+    <script type="text/javascript" charset="utf-8">
+        function getMoney() {
+            return $('#money').text();
+        }
+
+        function setName(name) {
+            $('#name').text(name);
+        }
+    </script>
+</body>
+
+</html>

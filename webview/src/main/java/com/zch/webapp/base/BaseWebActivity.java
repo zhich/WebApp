@@ -3,7 +3,7 @@
  * Copyright © zch All Rights Reserved.
  *
  */
-package com.zch.webapp;
+package com.zch.webapp.base;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -11,6 +11,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.net.http.SslError;
+import android.os.Build;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
@@ -19,12 +20,15 @@ import android.webkit.ConsoleMessage;
 import android.webkit.JsPromptResult;
 import android.webkit.JsResult;
 import android.webkit.SslErrorHandler;
+import android.webkit.ValueCallback;
 import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
+import com.zch.webapp.R;
 import com.zch.webapp.plugin.IPlugin;
 import com.zch.webapp.plugin.PluginManager;
 import com.zch.webapp.plugin.PluginNotFoundException;
@@ -78,6 +82,25 @@ public class BaseWebActivity extends Activity {
             url = "file:///android_asset" + File.separator + dir + File.separator + htmlFileName;
         }
         mWebView.loadUrl(url);
+    }
+
+    protected void androidCallJs(String methodName, String params) {
+        String url = null;
+        if (TextUtils.isEmpty(params)) {
+            url = "javascript:" + methodName + "()";
+        } else {
+            url = "javascript:" + methodName + "(" + params + ")";
+        }
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT) {
+            mWebView.loadUrl(url);
+        } else {
+            mWebView.evaluateJavascript(url, new ValueCallback<String>() {
+                @Override
+                public void onReceiveValue(String value) {
+                    Toast.makeText(mContext, value, Toast.LENGTH_LONG).show();
+                }
+            });
+        }
     }
 
     @Override
