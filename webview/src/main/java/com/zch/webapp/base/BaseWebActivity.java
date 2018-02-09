@@ -89,7 +89,7 @@ public class BaseWebActivity extends Activity {
         if (TextUtils.isEmpty(params)) {
             url = "javascript:" + methodName + "()";
         } else {
-            url = "javascript:" + methodName + "(" + params + ")";
+            url = "javascript:" + methodName + "('" + params + "')";
         }
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT) {
             mWebView.loadUrl(url);
@@ -97,7 +97,7 @@ public class BaseWebActivity extends Activity {
             mWebView.evaluateJavascript(url, new ValueCallback<String>() {
                 @Override
                 public void onReceiveValue(String value) {
-                    Toast.makeText(mContext, value, Toast.LENGTH_LONG).show();
+                    Toast.makeText(mContext, value, Toast.LENGTH_SHORT).show();
                 }
             });
         }
@@ -146,6 +146,8 @@ public class BaseWebActivity extends Activity {
             JSONObject args = null;
             JSONObject head = null;
             try {
+//                Toast.makeText(mContext,message,Toast.LENGTH_LONG).show();
+//                Toast.makeText(mContext,defaultValue,Toast.LENGTH_LONG).show();
                 head = new JSONObject(message);
                 if (!TextUtils.isEmpty(defaultValue) && !"null".equals(defaultValue)) {
                     try {
