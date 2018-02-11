@@ -51,7 +51,7 @@ public class AndroidCallJsActivity extends BaseWebActivity {
         if (id == R.id.tvBack) {
             finish();
         } else if (id == R.id.btnGetMoney) {
-            androidCallJs("getMoney", null);
+            androidCallJs("getMoney");
         } else if (id == R.id.btnSetName) {
             androidCallJs("setName", "马老板");
         }

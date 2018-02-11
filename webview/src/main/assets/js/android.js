@@ -1,23 +1,24 @@
+var COM_TAG = "WebApp";
 var App = {
     isShowBack: function (isShow) {
         var json = {
             "isShow": isShow
         }
-        exec_syn("App", "isShowBack", JSON.stringify(json));
+        execSyn("App", "isShowBack", JSON.stringify(json));
     },
     setTitle: function (title) {
         var json = {
             "title": title
         }
-        exec_syn("App", "setTitle", JSON.stringify(json));
+        execSyn("App", "setTitle", JSON.stringify(json));
     },
     finish: function () {
-        exec_syn("App", "finish", null);
+        execSyn("App", "finish", null);
     },
     /**
      * 跳转到原生页面
      * @param viewName 预定义的页面名称
-     * @param args  bundle参数
+     * @param args  bundle 参数
      */
     jumpToNativePage: function (viewName, args) {
         if (typeof args == 'undefined') {
@@ -25,7 +26,7 @@ var App = {
         }
         var json = args;
         json["viewName"] = viewName;
-        exec_syn("App", "jumpToNativePage", JSON.stringify(json));
+        execSyn("App", "jumpToNativePage", JSON.stringify(json));
     }
 }
 
@@ -44,7 +45,7 @@ var Preference = {
         if (fileName != undefined && fileName != '') {
             args["fileName"] = fileName;
         }
-        return exec_syn("Preference", "set", JSON.stringify(args));
+        return execSyn("Preference", "set", JSON.stringify(args));
     },
     /**
     * 取值
@@ -60,11 +61,34 @@ var Preference = {
         if (fileName != undefined && fileName != '') {
             args["fileName"] = fileName;
         }
-        return exec_syn("Preference", "get", JSON.stringify(args));
+        return execSyn("Preference", "get", JSON.stringify(args));
     }
 }
 
-var exec_syn = function (service, action, args) {
+var Pay = {
+    /*
+     * 支付宝
+     * @params orderString 订单 json 字符串
+     */
+    alipay: function (orderString) {
+        var json = {
+            "orderString": orderString
+        }
+        execAsyn("Pay", "alipay", JSON.stringify(json));
+    },
+    /*
+     * 微信支付
+     * @params orderString 订单 json 字符串
+     */
+    weChatPay: function (orderString) {
+        var json = {
+            "orderString": orderString
+        }
+        execAsyn("Pay", "weChatPay", JSON.stringify(json));
+    }
+}
+
+var execSyn = function (service, action, args) {
 
     var json = {
         "service": service,
@@ -86,5 +110,77 @@ var exec_syn = function (service, action, args) {
         return message;
     } else {
         console.error("service:" + service + " action:" + action + " error:" + message);
+    }
+}
+
+var execAsyn = function (service, action, args, success, fail) {
+    function doSuccess(result) {
+        try {
+            result = JSON.parse(result); // 如果是 json 字符串的话转成 json 对象
+            success(result);
+        } catch (e) {
+            console.error(e.message);
+            success(result); // 如果不是 json 字符串的话直接处理
+            return null;
+        }
+    }
+    WebApp.callNative(service, action, args, doSuccess, fail);
+}
+
+var WebApp = {
+    idCounter: 0, // 计数器
+    service: {},
+    action: {},
+    args: {},
+    callBackSuccess: {},
+    callBackFail: {},
+
+    callNative: function (service, action, args, success, fail) {
+        var id = "id_" + (++this.idCounter);
+        if (args == null) {
+            args = "{}";
+        }
+        this.service = service;
+        this.action = action;
+        this.args = args;
+
+        var json = {
+            "id": id,
+            "service": service,
+            "action": action,
+            "args": args
+        }
+        execSyn("AsynParams", "setParams", JSON.stringify(json));
+
+        if (typeof success != 'undefined') {
+            this.callBackSuccess[id] = success;
+        }
+        if (typeof fail != 'undefined') {
+            this.callBackFail[id] = fail;
+        }
+        var iframe = document.createElement("iframe");
+        iframe.setAttribute("src", COM_TAG + "://ready?id=" + id);
+        document.documentElement.appendChild(iframe);
+        iframe.parentNode.removeChild(iframe);
+        iframe = null;
+    },
+
+    callBackJs: function (result) {
+        result = JSON.parse(result);
+        var responseBody = result.responseBody;
+        var id = result.id;
+
+        var obj = JSON.parse(responseBody);
+        var message = obj.message;
+        var status = obj.status;
+        if (status == 0) {
+            if (typeof this.callBackSuccess[id] != 'undefined') {
+                setTimeout("WebApp.callBackSuccess['" + id + "']('" + message + "')", 0);
+            }
+        } else {
+            if (typeof this.callBackFail[id] != 'undefined') {
+                setTimeout("WebApp.callBackFail['" + id + "']('" + message + "')", 0);
+            }
+        }
     }
 }

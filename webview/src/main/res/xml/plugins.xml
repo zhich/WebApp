@@ -6,4 +6,10 @@
     <plugin
         name="Preference"
         class="com.zch.webapp.plugin.Preference"/>
+    <plugin
+        name="AsynParams"
+        class="com.zch.webapp.plugin.AsynParams"/>
+    <plugin
+        name="Pay"
+        class="com.zch.webapp.plugin.Pay"/>
 </plugins>

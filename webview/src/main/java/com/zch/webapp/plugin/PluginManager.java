@@ -13,6 +13,7 @@ import org.json.JSONObject;
 import org.xmlpull.v1.XmlPullParserException;
 
 import java.io.IOException;
+import java.util.Collection;
 import java.util.HashMap;
 
 /**
@@ -107,6 +108,14 @@ public class PluginManager {
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
+        }
+    }
+
+    public void onDestroy() {
+        mContext = null;
+        Collection<IPlugin> iPlugins = mPluginMap.values();
+        for (IPlugin iPlugin : iPlugins) {
+            iPlugin.onDestroy();
         }
     }
 }

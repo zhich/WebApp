@@ -17,9 +17,14 @@ import org.json.JSONObject;
  * @author zch
  * @since 2018-02-06
  */
-public abstract class Plugin implements IPlugin {
+public class Plugin implements IPlugin {
 
     protected Context context;
+
+    @Override
+    public PluginResult exec(String action, JSONObject args) throws ActionNotFoundException {
+        return null;
+    }
 
     @Override
     public PluginResult execAsyn(String action, JSONObject args, String requestID) throws ActionNotFoundException {

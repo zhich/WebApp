@@ -29,6 +29,7 @@ import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.zch.webapp.R;
+import com.zch.webapp.plugin.AsynParams;
 import com.zch.webapp.plugin.IPlugin;
 import com.zch.webapp.plugin.PluginManager;
 import com.zch.webapp.plugin.PluginNotFoundException;
@@ -49,6 +50,7 @@ import java.io.File;
 public class BaseWebActivity extends Activity {
 
     private static final String TAG = BaseWebActivity.class.getSimpleName();
+    private static final String COM_TAG = "WebApp"; // 对应 android.js 中的 COM_TAG
 
     protected FrameLayout mWebFrameLayout;
     protected BridgeWebView mWebView;
@@ -84,12 +86,16 @@ public class BaseWebActivity extends Activity {
         mWebView.loadUrl(url);
     }
 
-    protected void androidCallJs(String methodName, String params) {
+    protected void androidCallJs(String methodName, String... params) {
         String url = null;
-        if (TextUtils.isEmpty(params)) {
+        if (params == null || params.length == 0) {
             url = "javascript:" + methodName + "()";
         } else {
-            url = "javascript:" + methodName + "('" + params + "')";
+            StringBuilder sb = new StringBuilder("");
+            for (String p : params) {
+                sb.append(p).append(",");
+            }
+            url = "javascript:" + methodName + "('" + sb.substring(0, sb.length() - 1) + "')";
         }
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT) {
             mWebView.loadUrl(url);
@@ -103,8 +109,23 @@ public class BaseWebActivity extends Activity {
         }
     }
 
+    /**
+     * 异步加载
+     *
+     * @param responseBody
+     * @param requestID
+     */
+    public void asynLoadUrl(String responseBody, String requestID) {
+//        String url = "javascript:WebApp.callBackJs('" + responseBody + "','" + requestID + "')";
+//        mWebView.loadUrl(url);
+        androidCallJs("WebApp.callBackJs", responseBody, requestID);
+    }
+
     @Override
     protected void onDestroy() {
+        if (mPluginManager != null) {
+            mPluginManager.onDestroy();
+        }
         releaseWebView();
         super.onDestroy();
     }
@@ -182,8 +203,16 @@ public class BaseWebActivity extends Activity {
     private class WebServerClient extends WebViewClient {
         @Override
         public boolean shouldOverrideUrlLoading(WebView view, String url) {
+            if (url != null && url.toUpperCase().startsWith(COM_TAG.toUpperCase())) {
+                String id = url.substring(url.indexOf("id=") + 3);
+                String service = AsynParams.getServiceThenRemove(id);
+                String action = AsynParams.getActionThenRemove(id);
+                String args = AsynParams.getArgsThenRemove(id);
+
+                return true;
+            }
             view.loadUrl(url);
-            return super.shouldOverrideUrlLoading(view, url);
+            return true;
         }
 
         @Override
