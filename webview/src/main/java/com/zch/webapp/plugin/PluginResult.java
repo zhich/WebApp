@@ -51,6 +51,24 @@ public class PluginResult {
         return json;
     }
 
+    public JSONObject getJSON() {
+        JSONObject resulObj = new JSONObject();
+        try {
+            JSONObject msgObject = new JSONObject(message);
+
+            resulObj.put("message", msgObject);
+            resulObj.put("status", status.ordinal());
+        } catch (JSONException e) {
+            try {
+                resulObj.put("message", message);
+                resulObj.put("status", status.ordinal());
+            } catch (JSONException je) {
+                e.printStackTrace();
+            }
+        }
+        return resulObj;
+    }
+
     /**
      * 获取异常JSON串
      *

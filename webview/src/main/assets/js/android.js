@@ -70,21 +70,15 @@ var Pay = {
      * 支付宝
      * @params orderString 订单 json 字符串
      */
-    alipay: function (orderString) {
-        var json = {
-            "orderString": orderString
-        }
-        execAsyn("Pay", "alipay", JSON.stringify(json));
+    alipay: function (orderString, success) {
+        execAsyn("Pay", "alipay", orderString, success);
     },
     /*
      * 微信支付
      * @params orderString 订单 json 字符串
      */
-    weChatPay: function (orderString) {
-        var json = {
-            "orderString": orderString
-        }
-        execAsyn("Pay", "weChatPay", JSON.stringify(json));
+    weChatPay: function (orderString, success) {
+        execAsyn("Pay", "weChatPay", orderString, success);
     }
 }
 
@@ -166,13 +160,14 @@ var WebApp = {
     },
 
     callBackJs: function (result) {
-        result = JSON.parse(result);
-        var responseBody = result.responseBody;
-        var id = result.id;
+        console.log(result);
 
-        var obj = JSON.parse(responseBody);
-        var message = obj.message;
-        var status = obj.status;
+        result = JSON.parse(result);
+        var responseBodyObj = result.responseBody;
+        var id = result.id;
+        
+        var message = responseBodyObj.message;
+        var status = responseBodyObj.status;
         if (status == 0) {
             if (typeof this.callBackSuccess[id] != 'undefined') {
                 setTimeout("WebApp.callBackSuccess['" + id + "']('" + message + "')", 0);

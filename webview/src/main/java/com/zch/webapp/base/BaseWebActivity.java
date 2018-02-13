@@ -26,7 +26,6 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
-import android.widget.Toast;
 
 import com.zch.webapp.R;
 import com.zch.webapp.plugin.AsynParams;
@@ -103,7 +102,7 @@ public class BaseWebActivity extends Activity {
             mWebView.evaluateJavascript(url, new ValueCallback<String>() {
                 @Override
                 public void onReceiveValue(String value) {
-                    Toast.makeText(mContext, value, Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(mContext, value, Toast.LENGTH_SHORT).show();
                 }
             });
         }
@@ -112,13 +111,12 @@ public class BaseWebActivity extends Activity {
     /**
      * 异步加载
      *
-     * @param responseBody
-     * @param requestID
+     * @param result
      */
-    public void asynLoadUrl(String responseBody, String requestID) {
+    public void asynLoadUrl(String result) {
 //        String url = "javascript:WebApp.callBackJs('" + responseBody + "','" + requestID + "')";
 //        mWebView.loadUrl(url);
-        androidCallJs("WebApp.callBackJs", responseBody, requestID);
+        androidCallJs("WebApp.callBackJs", result);
     }
 
     @Override
@@ -208,7 +206,13 @@ public class BaseWebActivity extends Activity {
                 String service = AsynParams.getServiceThenRemove(id);
                 String action = AsynParams.getActionThenRemove(id);
                 String args = AsynParams.getArgsThenRemove(id);
-
+                try {
+                    mPluginManager.execAsyn(service, action, new JSONObject(args), id);
+                } catch (PluginNotFoundException e) {
+                    e.printStackTrace();
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
                 return true;
             }
             view.loadUrl(url);

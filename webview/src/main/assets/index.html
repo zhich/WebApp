@@ -108,20 +108,13 @@
 
 
             $('#alipay').on('click', function () {
-                var productName = '产品名称';
-                var productDescribe = '产品描述';
-                var productOrder = '产品订单';
-                var money = '100';
-                var payType = '支付类型';
-                Pay.alipay(productName, productDescribe, productOrder, money, payType, function (result) {
-                    var data = {
-                        payResult: result,
-                        productName: productName,
-                        productDescribe: productDescribe,
-                        productOrder: productOrder,
-                        money: money,
-                        payType: payType
-                    };
+                var orderString = {
+                    productName: '产品名称',
+                    productOrder: '产品订单',
+                    money: '100',
+                    payType: '支付类型'
+                }
+                Pay.alipay(JSON.stringify(orderString), function (result) {
                     // var alipay_result =  JSON.stringify(data);
                     alert('支付结果：' + JSON.stringify(result));
                 });

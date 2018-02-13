@@ -9,6 +9,7 @@ import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.os.SystemClock;
 
 import com.zch.webapp.WebActivity;
 
@@ -37,16 +38,17 @@ public class Pay extends Plugin {
 
     private PluginResult alipay(JSONObject args, String id) {
         final String money = args.optString("money");
-        final String requestID = args.optString("requestID");
+        final String requestID = id;
         new Thread(new Runnable() {
             @Override
             public void run() {
-                String responseBody = "成功支付了" + money + "元";
+                SystemClock.sleep(2000); // 模拟耗时请求
+                String message = "成功支付了" + money + "元";
                 Message msg = new Message();
                 msg.what = 1;
                 Bundle bundle = new Bundle();
                 bundle.putString("requestID", requestID);
-                bundle.putString("responseBody", responseBody);
+                bundle.putString("message", message);
                 msg.setData(bundle);
                 mHandler.sendMessage(msg);
             }
@@ -65,14 +67,17 @@ public class Pay extends Plugin {
                 case 1: {
                     Bundle bundle = msg.getData();
                     String requestID = bundle.getString("requestID");
-                    String responseBody = bundle.getString("responseBody");
+                    String message = bundle.getString("message");
 
-                    JSONObject jsonObject = new JSONObject();
-                    PluginResult pluginResult = null;
                     try {
-                        jsonObject.put("responseBody", responseBody);
-                        pluginResult = new PluginResult(jsonObject.toString());
-                        ((WebActivity) context).asynLoadUrl(pluginResult.getJSONString(), requestID);
+                        PluginResult pluginResult = new PluginResult(message);
+
+                        JSONObject resultObj = new JSONObject();
+                        resultObj.put("responseBody", pluginResult.getJSON());
+//                        resultObj.put("responseBody", pluginResult.getJSONString());
+                        resultObj.put("id", requestID);
+
+                        ((WebActivity) context).asynLoadUrl(resultObj.toString());
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }

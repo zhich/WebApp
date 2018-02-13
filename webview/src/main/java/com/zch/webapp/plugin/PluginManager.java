@@ -60,6 +60,34 @@ public class PluginManager {
         }
     }
 
+    /**
+     * 异步请求
+     *
+     * @param service
+     * @param action
+     * @param args
+     * @param requestID
+     * @return
+     * @throws PluginNotFoundException
+     */
+    public String execAsyn(String service, String action, JSONObject args, String requestID) throws PluginNotFoundException {
+        IPlugin plugin = getPlugin(service);
+        try {
+            PluginResult result = plugin.execAsyn(action, args, requestID);
+            if (result == null) {
+                return null;
+            }
+            return result.getJSONString();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return PluginResult.getErrorJSON(e);
+
+        } catch (ActionNotFoundException e) {
+            e.printStackTrace();
+            return PluginResult.getErrorJSON(e);
+        }
+    }
+
     private IPlugin getPlugin(String pluginName) throws PluginNotFoundException {
         String className = mNameClassMap.get(pluginName);
         if (className == null) {
